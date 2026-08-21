@@ -3,6 +3,93 @@ import parentLogo from './assets/Parent logo.avif';
 import studentIcon from './assets/Student Icon.png';
 import teacherIcon from './assets/Teacher Icon.avif';
 
+// Base backend API URL
+const BASE_URL = 'https://honours-project-inze.onrender.com';
+
+// Inline Style Definitions
+const cardStyle = {
+  border: '1px solid #e5e7eb',
+  borderRadius: '12px',
+  padding: '20px',
+  cursor: 'pointer',
+  textAlign: 'center',
+  backgroundColor: '#ffffff',
+  boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+  transition: 'transform 0.2s, box-shadow 0.2s'
+};
+
+const iconStyle = {
+  width: '64px',
+  height: '64px',
+  objectFit: 'contain'
+};
+
+const formBoxStyle = {
+  background: '#ffffff',
+  padding: '20px',
+  borderRadius: '12px',
+  border: '1px solid #e5e7eb',
+  maxWidth: '450px',
+  margin: '0 auto'
+};
+
+const labelStyle = {
+  display: 'block',
+  fontSize: '13px',
+  fontWeight: 'bold',
+  marginBottom: '4px',
+  color: '#374151'
+};
+
+const inputStyle = {
+  width: '100%',
+  padding: '10px',
+  borderRadius: '6px',
+  border: '1px solid #d1d5db',
+  fontSize: '14px',
+  boxSizing: 'border-box'
+};
+
+const btnStyle = {
+  width: '100%',
+  padding: '10px 16px',
+  backgroundColor: '#111827',
+  color: '#ffffff',
+  border: 'none',
+  borderRadius: '6px',
+  fontSize: '14px',
+  fontWeight: 'bold',
+  cursor: 'pointer'
+};
+
+const backBtnStyle = {
+  padding: '6px 12px',
+  fontSize: '12px',
+  background: 'none',
+  border: '1px solid #d1d5db',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  marginBottom: '10px'
+};
+
+const responsiveTableWrapper = {
+  overflowX: 'auto',
+  WebkitOverflowScrolling: 'touch',
+  border: '1px solid #e5e7eb',
+  borderRadius: '8px'
+};
+
+const tableStyle = {
+  width: '100%',
+  borderCollapse: 'collapse',
+  textAlign: 'left'
+};
+
+const thTdStyle = {
+  padding: '10px',
+  borderBottom: '1px solid #e5e7eb'
+};
+
 const parseResponse = async (res) => {
   const text = await res.text();
   if (!text) return { data: {}, text: '' };
@@ -244,7 +331,7 @@ export default function App() {
   const fetchStudentRecord = async ({ grade_class, subject, name, pin }, isBackground = false) => {
     if (!isBackground) setErrorMsg('');
     try {
-      const res = await fetch('/api/student/login', {
+      const res = await fetch(`${BASE_URL}/api/student/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ grade_class, subject, name, pin })
@@ -273,7 +360,7 @@ export default function App() {
     e.preventDefault();
     setErrorMsg('');
     try {
-      const res = await fetch('/api/teacher/login', {
+      const res = await fetch(`${BASE_URL}/api/teacher/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -300,7 +387,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch(`/api/teacher/class-data?grade_class=${encodeURIComponent(formData.grade_class)}&subject=${encodeURIComponent(formData.subject)}`, {
+      const res = await fetch(`${BASE_URL}/api/teacher/class-data?grade_class=${encodeURIComponent(formData.grade_class)}&subject=${encodeURIComponent(formData.subject)}`, {
         headers: { 'Authorization': `Bearer ${teacherData?.access_token || ''}` }
       });
       const { data, text } = await parseResponse(res);
@@ -397,7 +484,7 @@ export default function App() {
     });
 
     try {
-      const res = await fetch('/api/teacher/update-marks', {
+      const res = await fetch(`${BASE_URL}/api/teacher/update-marks`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -450,7 +537,6 @@ export default function App() {
           <h2 style={{ fontSize: '22px' }}>Academic Performance Tracker</h2>
           <p style={{ color: '#666', marginBottom: '25px', fontSize: '14px' }}>Select your portal to proceed</p>
           
-          {/* Responsive Card Container */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -647,7 +733,6 @@ export default function App() {
                     </span>
                   </div>
 
-                  {/* Horizontal Scroll Wrapper for Wide Spreadsheet Tables */}
                   <div style={responsiveTableWrapper}>
                     <table cellPadding="8" style={tableStyle}>
                       <thead>
@@ -708,104 +793,25 @@ export default function App() {
                     disabled={isSaving}
                     style={{ ...btnStyle, marginTop: '16px', backgroundColor: '#007bff' }}
                   >
-                    {isSaving ? 'Saving...' : 'Save Assessment Changes'}
+                    {isSaving ? 'Saving Changes...' : 'Save Assessment Changes'}
                   </button>
-                  {saveSuccessMsg && <p style={{ color: '#28a745', marginTop: '10px', fontWeight: 'bold', fontSize: '14px' }}>{saveSuccessMsg}</p>}
+
+                  {saveSuccessMsg && (
+                    <p style={{ color: '#16a34a', marginTop: '12px', fontWeight: 'bold', fontSize: '14px' }}>
+                      {saveSuccessMsg}
+                    </p>
+                  )}
+                  {errorMsg && (
+                    <p style={{ color: '#dc3545', marginTop: '12px', fontWeight: 'bold', fontSize: '14px' }}>
+                      {errorMsg}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
           )}
-          {errorMsg && <p style={{ color: '#dc3545', marginTop: '15px', fontWeight: 'bold', fontSize: '14px' }}>{errorMsg}</p>}
         </div>
       )}
     </div>
   );
 }
-
-// --- STYLES ---
-const cardStyle = {
-  border: '1px solid #e2e8f0',
-  borderRadius: '12px',
-  padding: '20px 16px',
-  cursor: 'pointer',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
-  backgroundColor: '#fff',
-  textAlign: 'center',
-  transition: 'transform 0.1s ease'
-};
-
-const iconStyle = {
-  width: '75px',
-  height: '75px',
-  objectFit: 'contain'
-};
-
-const formBoxStyle = {
-  background: '#f9fafb',
-  padding: '16px',
-  borderRadius: '8px',
-  border: '1px solid #e5e7eb',
-  maxWidth: '500px',
-  margin: '0 auto'
-};
-
-const labelStyle = {
-  fontSize: '13px',
-  fontWeight: '600',
-  color: '#374151',
-  marginBottom: '4px',
-  display: 'inline-block'
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '10px 12px',
-  borderRadius: '6px',
-  border: '1px solid #d1d5db',
-  boxSizing: 'border-box',
-  fontSize: '14px',
-  backgroundColor: '#fff'
-};
-
-const btnStyle = {
-  width: '100%',
-  padding: '12px 16px',
-  backgroundColor: '#28a745',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '6px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
-  fontSize: '14px'
-};
-
-const backBtnStyle = {
-  padding: '6px 12px',
-  marginBottom: '12px',
-  cursor: 'pointer',
-  backgroundColor: '#4b5563',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '6px',
-  fontSize: '12px'
-};
-
-const responsiveTableWrapper = {
-  overflowX: 'auto',
-  WebkitOverflowScrolling: 'touch',
-  border: '1px solid #e5e7eb',
-  borderRadius: '8px',
-  marginBottom: '15px'
-};
-
-const tableStyle = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  textAlign: 'left',
-  minWidth: '450px'
-};
-
-const thTdStyle = {
-  borderBottom: '1px solid #e5e7eb',
-  padding: '10px 12px'
-};
