@@ -1,0 +1,36 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+  padding: 2em;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e2e2e2;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+h1 {
+  color: #2c3e50;
+  border-bottom: 2px solid #646cff;
+  padding-bottom: 10px;
+}
+
+button {
+  background-color: #646cff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #535bf2;
+}
